@@ -1,0 +1,495 @@
+---
+title: "Clothster Analysis"
+output: html_document
+---
+
+NAME: Kristofer Arguirov Sara Pisaniello
+
+
+
+```{r, results="hide", warning=FALSE} 
+library(dplyr)
+library(mclust)
+library(clValid)
+library(d3heatmap)
+library(clustertend)
+library(factoextra)
+library(cluster)
+library(ggplot2)
+library(fpc)
+library(NbClust)
+library(readxl)
+library(xlsx)
+#importazione dati
+
+DatasetESTERO<- read_excel("DATASETestero.xlsx")
+estero=DatasetESTERO[,-1]
+estero[estero==0]<-1
+
+DatasetREGIONI<- read_excel("datasetREGIONI.xlsx")
+regioni=DatasetREGIONI[,-1]
+regioni[regioni==0]<-1
+
+#Trasformo le variabili categoriali in FACTOR
+#SELEZIONO quelle che devo convertire
+con.names = estero %>% select_if(is.numeric) %>% colnames()
+cat.names = estero %>% select_if(is.character) %>% colnames()
+estero[,cat.names] = data.frame(sapply(estero[,cat.names], as.factor))
+str(estero[,cat.names])
+
+con.names = regioni %>% select_if(is.numeric) %>% colnames()
+cat.names = regioni %>% select_if(is.character) %>% colnames()
+regioni[,cat.names] = data.frame(sapply(regioni[,cat.names], as.factor))
+str(regioni[,cat.names])
+
+####################################################PAESIIIIIIIIIIIIIIIIIIIIIIII
+##Creazione della matrice di dissimilarità 
+#con distanza di gower e approssimo a 2 cifre decimali
+
+set.seed(123)
+gower.dist.estero <- daisy(estero, metric = c("gower"))
+
+
+#Faccio la misura di hopkins per vedere se il dataset è clusterizzabile
+set.seed(123)
+gower.dist.estero.round <- round(as.matrix(gower.dist.estero),5)
+hopkins(gower.dist.estero.round, n=nrow(gower.dist.estero.round)-1)
+# 0.1854653
+#I dati sono clusterizzabili, valore sotto lo 0.5
+
+#ANALISI
+#Partiamo con il metodo MODEL BASED CLUSTERED
+
+#con la Funzione Mclust, calcoliamo model based clustering
+# con G delimitiamo a 20 il numero massimo di cluster
+set.seed(123)
+mc.estero <- Mclust(gower.dist.estero, G=1:20) 
+summary(mc.estero)
+#Mclust VII (spherical, varying volume) model with 13 components
+
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+
+
+
+# Dividere il dataset in cluster e fare le analisi
+estero$Cluster <- NA
+estero$Cluster <- mc.estero$classification
+n <- length(unique(mc.estero$classification))
+#fino al 18
+cluster1 <- estero[which(estero$Cluster==1),]
+str(cluster1)
+qual1 <- sapply(cluster1, is.factor)
+q1 <- cluster1[,qual1]
+modes1 <- apply(q1,2,getmode)
+mode1 <- data.frame(modes1)
+
+cluster2 <- estero[which(estero$Cluster==2),]
+str(cluster2)
+qual2 <- sapply(cluster2, is.factor)
+q2 <- cluster2[,qual2]
+modes2 <- apply(q2,2,getmode)
+mode2 <- data.frame(modes2)
+
+cluster3 <- estero[which(estero$Cluster==3),]
+str(cluster3)
+qual3 <- sapply(cluster3, is.factor)
+q3 <- cluster3[,qual3]
+modes3 <- apply(q3,2,getmode)
+mode3 <- data.frame(modes3)
+
+cluster4 <- estero[which(estero$Cluster==4),]
+str(cluster4)
+qual4 <- sapply(cluster4, is.factor)
+q4 <- cluster4[,qual4]
+modes4 <- apply(q4,2,getmode)
+mode4 <- data.frame(modes4)
+
+cluster5 <- estero[which(estero$Cluster==5),]
+str(cluster5)
+qual5 <- sapply(cluster5, is.factor)
+q5 <- cluster5[,qual5]
+modes5 <- apply(q5,2,getmode)
+mode5 <- data.frame(modes5)
+
+cluster6 <- estero[which(estero$Cluster==6),]
+str(cluster6)
+qual6 <- sapply(cluster6, is.factor)
+q6 <- cluster6[,qual6]
+modes6 <- apply(q6,2,getmode)
+mode6 <- data.frame(modes6)
+
+cluster7 <- estero[which(estero$Cluster==7),]
+str(cluster7)
+qual7 <- sapply(cluster7, is.factor)
+q7 <- cluster7[,qual7]
+modes7 <- apply(q7,2,getmode)
+mode7 <- data.frame(modes7)
+
+cluster8 <- estero[which(estero$Cluster==8),]
+str(cluster8)
+qual8 <- sapply(cluster8, is.factor)
+q8 <- cluster8[,qual8]
+modes8 <- apply(q8,2,getmode)
+mode8 <- data.frame(modes8)
+
+cluster9 <- estero[which(estero$Cluster==9),]
+str(cluster9)
+qual9 <- sapply(cluster9, is.factor)
+q9 <- cluster9[,qual9]
+modes9 <- apply(q9,2,getmode)
+mode9 <- data.frame(modes9)
+
+cluster10 <- estero[which(estero$Cluster==10),]
+str(cluster10)
+qual10 <- sapply(cluster10, is.factor)
+q10 <- cluster10[,qual10]
+modes10 <- apply(q10,2,getmode)
+mode10 <- data.frame(modes10)
+
+cluster11 <- estero[which(estero$Cluster==11),]
+str(cluster11)
+qual11 <- sapply(cluster11, is.factor)
+q11 <- cluster11[,qual11]
+modes11 <- apply(q11,2,getmode)
+mode11 <- data.frame(modes11)
+
+cluster12 <- estero[which(estero$Cluster==12),]
+str(cluster12)
+qual12 <- sapply(cluster12, is.factor)
+q12 <- cluster12[,qual12]
+modes12 <- apply(q12,2,getmode)
+mode12 <- data.frame(modes12)
+
+cluster13 <- estero[which(estero$Cluster==13),]
+str(cluster13)
+qual13 <- sapply(cluster13, is.factor)
+q13 <- cluster13[,qual13]
+modes13 <- apply(q13,2,getmode)
+mode13 <- data.frame(modes13)
+
+ModeTotale <- cbind(mode1,mode2,mode3,mode4,mode5,mode6,mode7,mode8,mode9,mode10,mode11, mode12,mode13)
+Modess <- data.frame(t(ModeTotale))
+
+write.xlsx(estero, "ClusterPaesi.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+#######################################Cluster PAESIIIIIIIIIIIII
+
+
+estero$Cluster <- mc.estero$classification
+
+PaesiCluster1 <- estero[which(estero$Cluster==1),]
+PaesiCluster2 <- estero[which(estero$Cluster==2),]
+PaesiCluster3 <- estero[which(estero$Cluster==3),]
+PaesiCluster4 <- estero[which(estero$Cluster==4),]
+PaesiCluster5 <- estero[which(estero$Cluster==5),]
+PaesiCluster6 <- estero[which(estero$Cluster==6),]
+PaesiCluster7 <- estero[which(estero$Cluster==7),]
+PaesiCluster8 <- estero[which(estero$Cluster==8),]
+PaesiCluster9 <- estero[which(estero$Cluster==9),]
+PaesiCluster10 <- estero[which(estero$Cluster==10),]
+PaesiCluster11 <- estero[which(estero$Cluster==11),]
+PaesiCluster12 <- estero[which(estero$Cluster==12),]
+PaesiCluster13 <- estero[which(estero$Cluster==13),]
+
+
+write.xlsx(PaesiCluster1, "ClusterPaesi1.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(PaesiCluster2, "ClusterPaesi2.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(PaesiCluster3, "ClusterPaesi3.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(PaesiCluster4, "ClusterPaesi4.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(PaesiCluster5, "ClusterPaesi5.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(PaesiCluster6, "ClusterPaesi6.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(PaesiCluster7, "ClusterPaesi7.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(PaesiCluster8, "ClusterPaesi8.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(PaesiCluster9, "ClusterPaesi9.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(PaesiCluster10, "ClusterPaesi10.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(PaesiCluster11, "ClusterPaesi11.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(PaesiCluster11, "ClusterPaesi12.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(PaesiCluster11, "ClusterPaesi13.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#############################################REGIONIIIIIIIIIIIIIIIIII
+
+##Creazione della matrice di dissimilarità 
+#con distanza di gower e approssimo a 2 cifre decimali
+
+set.seed(456)
+gower.dist.regioni <- daisy(regioni, metric = c("gower"))
+
+
+#Faccio la misura di hopkins per vedere se il dataset è clusterizzabile
+set.seed(456)
+gower.dist.regioni.round <- round(as.matrix(gower.dist.regioni),5)
+hopkins(gower.dist.regioni.round, n=nrow(gower.dist.regioni.round)-1)
+#0.1426782
+#I dati sono clusterizzabili, valore sotto lo 0.5
+
+#ANALISI
+#Partiamo con il metodo MODEL BASED CLUSTERED
+
+#con la Funzione Mclust, calcoliamo model based clustering
+# con G delimitiamo a 20 il numero massimo di cluster
+set.seed(456)
+mc.regioni <- Mclust(gower.dist.regioni, G=1:20) 
+summary(mc.regioni)
+#Mclust EII (spherical, equal volume) model with 17 components
+
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+
+
+
+# Dividere il dataset in cluster e fare le analisi
+regioni$Cluster <- NA
+regioni$Cluster <- mc.regioni$classification
+n <- length(unique(mc.regioni$classification))
+#fino al 12
+Rcluster1 <- regioni[which(regioni$Cluster==1),]
+str(Rcluster1)
+qual1 <- sapply(Rcluster1, is.factor)
+q1 <- Rcluster1[,qual1]
+Rmodes1 <- apply(q1,2,getmode)
+Rmode1 <- data.frame(Rmodes1)
+
+Rcluster2 <- regioni[which(regioni$Cluster==2),]
+str(Rcluster2)
+qual2 <- sapply(Rcluster2, is.factor)
+q2 <- Rcluster2[,qual2]
+Rmodes2 <- apply(q2,2,getmode)
+Rmode2 <- data.frame(Rmodes2)
+
+Rcluster3 <- regioni[which(regioni$Cluster==3),]
+str(Rcluster3)
+qual3 <- sapply(Rcluster3, is.factor)
+q3 <- Rcluster3[,qual3]
+Rmodes3 <- apply(q3,2,getmode)
+Rmode3 <- data.frame(Rmodes3)
+
+Rcluster4 <- regioni[which(regioni$Cluster==4),]
+str(Rcluster4)
+qual4 <- sapply(Rcluster4, is.factor)
+q4 <- Rcluster4[,qual4]
+Rmodes4 <- apply(q4,2,getmode)
+Rmode4 <- data.frame(Rmodes4)
+
+Rcluster5 <- regioni[which(regioni$Cluster==5),]
+str(Rcluster5)
+qual5 <- sapply(Rcluster5, is.factor)
+q5 <- Rcluster5[,qual5]
+Rmodes5 <- apply(q5,2,getmode)
+Rmode5 <- data.frame(Rmodes5)
+
+Rcluster6 <- regioni[which(regioni$Cluster==6),]
+str(Rcluster6)
+qual6 <- sapply(Rcluster6, is.factor)
+q6 <- Rcluster6[,qual6]
+Rmodes6 <- apply(q6,2,getmode)
+Rmode6 <- data.frame(Rmodes6)
+
+Rcluster7 <- regioni[which(regioni$Cluster==7),]
+str(Rcluster7)
+qual7 <- sapply(Rcluster7, is.factor)
+q7 <- Rcluster7[,qual7]
+Rmodes7 <- apply(q7,2,getmode)
+Rmode7 <- data.frame(Rmodes7)
+
+Rcluster8 <- regioni[which(regioni$Cluster==8),]
+str(Rcluster8)
+qual8 <- sapply(Rcluster8, is.factor)
+q8 <- Rcluster8[,qual8]
+Rmodes8 <- apply(q8,2,getmode)
+Rmode8 <- data.frame(Rmodes8)
+
+Rcluster9 <- regioni[which(regioni$Cluster==9),]
+str(Rcluster9)
+qual9 <- sapply(Rcluster9, is.factor)
+q9 <- Rcluster9[,qual9]
+Rmodes9 <- apply(q9,2,getmode)
+Rmode9 <- data.frame(Rmodes9)
+
+Rcluster10 <- regioni[which(regioni$Cluster==10),]
+str(Rcluster10)
+qual10 <- sapply(Rcluster10, is.factor)
+q10 <- Rcluster10[,qual10]
+Rmodes10 <- apply(q10,2,getmode)
+Rmode10 <- data.frame(Rmodes10)
+
+Rcluster11 <- regioni[which(regioni$Cluster==11),]
+str(Rcluster11)
+qual11 <- sapply(Rcluster11, is.factor)
+q11 <- Rcluster11[,qual11]
+Rmodes11 <- apply(q11,2,getmode)
+Rmode11 <- data.frame(Rmodes11)
+
+Rcluster12 <- regioni[which(regioni$Cluster==12),]
+str(Rcluster12)
+qual12 <- sapply(Rcluster12, is.factor)
+q12 <- Rcluster12[,qual12]
+Rmodes12 <- apply(q12,2,getmode)
+Rmode12 <- data.frame(Rmodes12)
+
+Rcluster13 <- regioni[which(regioni$Cluster==13),]
+str(Rcluster13)
+qual13 <- sapply(Rcluster13, is.factor)
+q13 <- Rcluster13[,qual13]
+Rmodes13 <- apply(q13,2,getmode)
+Rmode13 <- data.frame(Rmodes13)
+
+Rcluster14 <- regioni[which(regioni$Cluster==14),]
+str(Rcluster14)
+qual14 <- sapply(Rcluster14, is.factor)
+q14 <- Rcluster14[,qual14]
+Rmodes14 <- apply(q14,2,getmode)
+Rmode14 <- data.frame(Rmodes14)
+
+Rcluster15 <- regioni[which(regioni$Cluster==15),]
+str(Rcluster15)
+qual15 <- sapply(Rcluster15, is.factor)
+q15 <- Rcluster15[,qual15]
+Rmodes15 <- apply(q15,2,getmode)
+Rmode15 <- data.frame(Rmodes15)
+
+Rcluster16 <- regioni[which(regioni$Cluster==16),]
+str(Rcluster16)
+qual16 <- sapply(Rcluster16, is.factor)
+q16 <- Rcluster16[,qual16]
+Rmodes16 <- apply(q16,2,getmode)
+Rmode16 <- data.frame(Rmodes16)
+
+Rcluster17 <- regioni[which(regioni$Cluster==17),]
+str(Rcluster17)
+qual17 <- sapply(Rcluster17, is.factor)
+q17 <- Rcluster17[,qual17]
+Rmodes17 <- apply(q17,2,getmode)
+Rmode17 <- data.frame(Rmodes17)
+
+RRModeTotale <- cbind(Rmode1,Rmode2,Rmode3,Rmode4,Rmode5,Rmode6,Rmode7,Rmode8,Rmode9,Rmode10,Rmode11, Rmode12, Rmode13, Rmode14, Rmode15, Rmode16, Rmode17)
+RRModess <- data.frame(t(RRModeTotale))
+
+write.xlsx(estero, "ClusterRegioni.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+#############################################Printo i cluster per regioni
+regioni$Cluster <- mc.regioni$classification
+
+RegioniCluster1 <- regioni[which(regioni$Cluster==1),]
+RegioniCluster2 <- regioni[which(regioni$Cluster==2),]
+RegioniCluster3 <- regioni[which(regioni$Cluster==3),]
+RegioniCluster4 <- regioni[which(regioni$Cluster==4),]
+RegioniCluster5 <- regioni[which(regioni$Cluster==5),]
+RegioniCluster6 <- regioni[which(regioni$Cluster==6),]
+RegioniCluster7 <- regioni[which(regioni$Cluster==7),]
+RegioniCluster8 <- regioni[which(regioni$Cluster==8),]
+RegioniCluster9 <- regioni[which(regioni$Cluster==9),]
+RegioniCluster10 <- regioni[which(regioni$Cluster==10),]
+RegioniCluster11 <- regioni[which(regioni$Cluster==11),]
+RegioniCluster12 <- regioni[which(regioni$Cluster==12),]
+RegioniCluster13 <- regioni[which(regioni$Cluster==13),]
+RegioniCluster14 <- regioni[which(regioni$Cluster==14),]
+RegioniCluster15 <- regioni[which(regioni$Cluster==15),]
+RegioniCluster16 <- regioni[which(regioni$Cluster==16),]
+RegioniCluster17 <- regioni[which(regioni$Cluster==17),]
+
+
+write.xlsx(RegioniCluster1, "ClusterRegioni1.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster2, "ClusterRegioni2.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster3, "ClusterRegioni3.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster4, "ClusterRegioni4.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster5, "ClusterRegioni5.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster6, "ClusterRegioni6.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster7, "ClusterRegioni7.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster8, "ClusterRegioni8.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster9, "ClusterRegioni9.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster10, "ClusterRegioni10.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster11, "ClusterRegioni11.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster12, "ClusterRegioni12.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster13, "ClusterRegioni13.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster14, "ClusterRegioni14.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster15, "ClusterRegioni15.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster16, "ClusterRegioni16.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+write.xlsx(RegioniCluster17, "ClusterRegioni17.xls", sheetName = "Estero", 
+           col.names = TRUE, row.names = TRUE, append = FALSE)
+
+
+
+```
+
+
+
